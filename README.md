@@ -5,6 +5,7 @@ This driver is connected through the Arduino SPI.
 This library is derived from the Intel's CurieIMU driver for the Arduino/Genuino 101 and from the work of Hanyazou.
 
 Intel's driver repository: https://github.com/01org/corelibs-arduino101/tree/master/libraries/CurieIMU
+
 Hanyazou's BMI160-Arduino repository: https://github.com/hanyazou/BMI160-Arduino
 
 BMI160: https://www.bosch-sensortec.com/bst/products/all_products/bmi160
