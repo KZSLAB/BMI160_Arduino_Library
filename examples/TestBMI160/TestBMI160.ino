@@ -25,11 +25,11 @@ void setup() {
 }
 
 void loop() {
-  int axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw, mxRaw, myRaw, mzRaw;         // raw gyro values
+  int axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw, mxRaw, myRaw, mzRaw, tRaw;         // raw values
   float ax, ay, az, gx, gy, gz;
 
   // read raw gyro measurements from device
-  BMI160.readMotionSensor9(axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw, mxRaw, myRaw, mzRaw);
+  BMI160.readMotionSensor9(axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw, mxRaw, myRaw, mzRaw, tRaw);
   
   // convert the raw gyro data to degrees/second
   gx = convertRawGyro(gxRaw);
@@ -56,7 +56,15 @@ void loop() {
   Serial.print("\t");
   Serial.print(gz);
   Serial.println();
+  Serial.print("m:\t");
   Serial.print(mxRaw);
+  Serial.print("\t");
+  Serial.print(myRaw);
+  Serial.print("\t");
+  Serial.print(mzRaw);
+  Serial.println();
+  Serial.print(tRaw);
+  Serial.println();
   Serial.println();
 
   delay(500);
