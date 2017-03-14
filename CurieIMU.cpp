@@ -1661,11 +1661,11 @@ void CurieIMUClass::readMotionSensor(int& ax, int& ay, int& az, int& gx, int& gy
     gz = sgz;
 }
 
-void CurieIMUClass::readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz)
+void CurieIMUClass::readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz, int& t)
 {
-    int16_t sax, say, saz, sgx, sgy, sgz, smx, smy, smz;
+    int16_t sax, say, saz, sgx, sgy, sgz, smx, smy, smz, st;
 
-    getMotion9(&sax, &say, &saz, &sgx, &sgy, &sgz, &smx, &smy, &smz);
+    getMotion9(&sax, &say, &saz, &sgx, &sgy, &sgz, &smx, &smy, &smz, &st);
 
     ax = sax;
     ay = say;
@@ -1676,6 +1676,7 @@ void CurieIMUClass::readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& g
     mx = smx;
     my = smy;
     mz = smz;
+    t  = st;
 }
 
 void CurieIMUClass::readAccelerometer(int& x, int& y, int& z)

@@ -192,7 +192,7 @@ class CurieIMUClass : public BMI160Class {
         void setStepDetectionMode(int mode);
 
         void readMotionSensor(int& ax, int& ay, int& az, int& gx, int& gy, int& gz);
-        void readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz);
+        void readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz, int& t);
         void readAccelerometer(int& x, int& y, int& z);
         void readGyro(int& x, int& y, int& z);
         void readMag(int& x, int& y, int& z);
