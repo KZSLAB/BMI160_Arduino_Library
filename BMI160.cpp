@@ -2275,13 +2275,14 @@ void BMI160Class::getMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx,
  * @see getMagneto() (TODO)
  * @see BMI160_RA_MAG_X_L
  */
-void BMI160Class::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz) {
+void BMI160Class::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz, int16_t* t) {
     uint8_t buffer[20];
     buffer[0] = BMI160_RA_MAG_X_L;
     serial_buffer_transfer(buffer, 1, 20);
     *mx = (((int16_t)buffer[1])  << 8) | buffer[0];
     *my = (((int16_t)buffer[3])  << 8) | buffer[2];
     *mz = (((int16_t)buffer[5])  << 8) | buffer[4];
+    *t  = (((int16_t)buffer[7])  << 8) | buffer[6];
     *gx = (((int16_t)buffer[9])  << 8) | buffer[8];
     *gy = (((int16_t)buffer[11])  << 8) | buffer[10];
     *gz = (((int16_t)buffer[13])  << 8) | buffer[12];
