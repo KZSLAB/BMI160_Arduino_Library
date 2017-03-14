@@ -12,6 +12,4 @@ class BMI160GenClass : public CurieIMUClass {
         void attachInterrupt(void (*callback)(void));
 };
 
-//extern BMI160GenClass BMI160;
-
 #endif /* _BMI160GEN_H_ */

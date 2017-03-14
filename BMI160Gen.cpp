@@ -23,5 +23,3 @@ void BMI160GenClass::attachInterrupt(void (*callback)(void))
         Serial.println("BMI160GenClass::attachInterrupt: No interruption pin specified.");
     }
 }
-
-//BMI160GenClass BMI160;
