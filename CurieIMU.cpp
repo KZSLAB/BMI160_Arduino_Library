@@ -200,7 +200,7 @@ void CurieIMUClass::setAccelerometerRate(float rate)
     setAccelRate(bmiRate);
 }
 
-float CurieIMUClass::getMagRate()       //Ajout pour BMM150
+float CurieIMUClass::getMagRate()       //Added for BMM150 Support
 {
     float rate;
 
@@ -254,7 +254,7 @@ float CurieIMUClass::getMagRate()       //Ajout pour BMM150
     return rate;
 }
 
-void CurieIMUClass::setMagRate(float rate)    //Ajout pour BMM150
+void CurieIMUClass::setMagRate(float rate)    //Added for BMM150 Support
 {
     BMI160MagRate bmiRate;
 
@@ -1701,7 +1701,7 @@ void CurieIMUClass::readGyro(int& x, int& y, int& z)
     z = sz;
 }
 
-void CurieIMUClass::readMag(int& x, int& y, int& z)     //Ajout pour BMM150
+void CurieIMUClass::readMag(int& x, int& y, int& z)     //Added for BMM150 Support
 {
     int16_t sx, sy, sz;
 
@@ -1738,7 +1738,7 @@ int CurieIMUClass::readGyro(int axis)
     return 0;
 }
 
-int CurieIMUClass::readMag(int axis)      //Ajout pour BMM150
+int CurieIMUClass::readMag(int axis)      //Added for BMM150 Support
 {
     if (axis == X_AXIS) {
         return getMagnetoX();

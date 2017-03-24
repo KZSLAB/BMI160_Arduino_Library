@@ -24,7 +24,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING forM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ===============================================
@@ -71,8 +71,8 @@ THE SOFTWARE.
 #define BMI160_STATUS_NVM_RDY       4
 #define BMI160_STATUS_DRDY_GYR      6
 #define BMI160_STATUS_DRDY_ACC      7
-#define BMI160_STATUS_DRDY_MAG      5   //Ajout pour BMM150
-#define BMI160_STATUS_MAG_MAN_OP    2   //Ajour pour BMM150
+#define BMI160_STATUS_DRDY_MAG      5  //Added for BMM150 Support
+#define BMI160_STATUS_MAG_MAN_OP    2  //Added for BMM150 Support
 
 #define BMI160_RA_STATUS            0x1B
 
@@ -133,12 +133,30 @@ THE SOFTWARE.
 #define BMI160_RA_MAG_CONF          0X44
 
 #define BMI160_FIFO_HEADER_EN_BIT   4
-#define BMI160_FIFO_MAG_EN_BIT      5   //Ajout pour BMM150
+#define BMI160_FIFO_MAG_EN_BIT      5  //Added for BMM150 Support
 #define BMI160_FIFO_ACC_EN_BIT      6
 #define BMI160_FIFO_GYR_EN_BIT      7
 
 #define BMI160_RA_FIFO_CONFIG_0     0x46
 #define BMI160_RA_FIFO_CONFIG_1     0x47
+
+#define BMI160_MAG_IF_0             0x4B  //Added for BMM150 Support
+#define BMI160_MAG_IF_1             0x4C< //Added for BMM150 Support
+#define BMI160_MAG_IF_2             0x4D  //Added for BMM150 Support
+#define BMI160_MAG_IF_3             0x4E  //Added for BMM150 Support
+#define BMI160_MAG_IF_4             0x4F  //Added for BMM150 Support
+
+#define BMM150_POWER_REG            0x4B  //Added for BMM150 Support
+#define BMM150_OPMODE_REG           0x4C  //Added for BMM150 Support
+
+//Based I2C addr is 0x20 caused it is 0x10 plus one 0 at the end.
+#define BMM150_BASED_I2C_ADDR       0x20  //Added for BMM150 Support
+#define BMI160_MAG_MAN_EN           0x83  //Added for BMM150 Support
+#define BMI160_MAG_MAN_DIS          0x03  //Added for BMM150 Support
+#define BMI160_MAG_CONF_DEFAULT     0x88  //Added for BMM150 Support
+
+#define BMM150_POWER_REG_DEFAULT    0x01  //Added for BMM150 Support
+#define BMM150_OPMODE_REG_DEFAULT   0x00  //Added for BMM150 Support
 
 #define BMI160_ANYMOTION_EN_BIT     0
 #define BMI160_ANYMOTION_EN_LEN     3
@@ -213,9 +231,9 @@ THE SOFTWARE.
 
 #define BMI160_RA_FOC_CONF          0x69
 
-#define BMI160_IF_CONF              0x6B        //Ajout pour BMM150
+#define BMI160_IF_CONF              0x6B  //Added for BMM150 Support
 
-#define BMI160_2ND_INT_MAG          0x20        //Ajout pour BMM150
+#define BMI160_2ND_INT_MAG          0x20  //Added for BMM150 Support
 
 #define BMI160_GYR_OFFSET_X_MSB_BIT 0
 #define BMI160_GYR_OFFSET_X_MSB_LEN 2
@@ -616,8 +634,8 @@ class BMI160Class {
         void setGyroFIFOEnabled(bool enabled);
         bool getAccelFIFOEnabled();
         void setAccelFIFOEnabled(bool enabled);
-        bool getMagFIFOEnabled();                   //Ajout pour BMM150
-        void setMagFIFOEnabled(bool enabled);       //Ajout pour BMM150
+        bool getMagFIFOEnabled();                   //Added for BMM150 Support
+        void setMagFIFOEnabled(bool enabled);       //Added for BMM150 Support
 
         bool getIntFIFOBufferFullEnabled();
         void setIntFIFOBufferFullEnabled(bool enabled);
@@ -708,6 +726,8 @@ class BMI160Class {
         void reg_write(uint8_t reg, uint8_t data);
         void reg_write_bits(uint8_t reg, uint8_t data, unsigned pos, unsigned len);
         uint8_t reg_read_bits(uint8_t reg, unsigned pos, unsigned len);
+        uint8_t BMM150_reg_read (uint8_t reg);                //Added for BMM150 Support
+        void BMM150_reg_write(uint8_t reg, uint8_t data);     //Added for BMM150 Support
 };
 
 #endif /* _BMI160_H_ */

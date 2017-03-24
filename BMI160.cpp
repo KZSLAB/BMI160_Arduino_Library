@@ -78,6 +78,21 @@ uint8_t BMI160Class::reg_read_bits(uint8_t reg, unsigned pos, unsigned len)
     return b;
 }
 
+uint8_t BMI160Class::BMM150_reg_read (uint8_t reg)
+{
+    uint8_t b;
+    reg_write(BMI160_MAG_IF_2, reg);
+    b = reg_read(BMI160_MAG_IF_4);
+    return b;
+}
+
+void BMI160Class::BMM150_reg_write(uint8_t reg, uint8_t data)
+{
+    uint8_t b;
+    reg_write(BMI160_MAG_IF_4, data);
+    reg_write(BMI160_MAG_IF_3, reg);
+}
+
 /******************************************************************************/
 
 /** Power on and prepare for general usage.
@@ -113,10 +128,15 @@ void BMI160Class::initialize()
                                 BMI160_GYR_PMU_STATUS_LEN))
         delay(1);
 
-    /* Initialize  the second interface aas a magnetometer */
+    /* Initialize  the second interface as a magnetometer */
     reg_write(BMI160_IF_CONF, BMI160_2ND_INT_MAG);
     /* Power up the magnetometer */
-    reg_write(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);
+    reg_write(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);           //Added for BMM150 Support
+    reg_write(BMI160_MAG_IF_0, BMM150_BASED_I2C_ADDR);              //Added for BMM150 Support
+    reg_write(BMI160_MAG_IF_1, BMI160_MAG_MAN_EN);                  //Added for BMM150 Support
+    reg_write(BMI160_RA_MAG_CONF, BMI160_MAG_CONF_DEFAULT);         //Added for BMM150 Support
+    BMM150_reg_write(BMM150_POWER_REG, BMM150_POWER_REG_DEFAULT);   //Added for BMM150 Support
+    BMM150_reg_write(BMM150_OPMODE_REG, BMM150_OPMODE_REG_DEFAULT); //Added for BMM150 Support
     delay(1);
     /* Wait for power-up to complete */
     while (0x1 != reg_read_bits(BMI160_RA_PMU_STATUS,
@@ -1597,7 +1617,7 @@ void BMI160Class::setGyroFIFOEnabled(bool enabled) {
  * @return Current magnetometer FIFO enabled value
  * @see BMI160_RA_FIFO_CONFIG_1
  */
-bool BMI160Class::getMagFIFOEnabled() {                     //Ajout pour BMM150
+bool BMI160Class::getMagFIFOEnabled() {                     //Added for BMM150 Support
     return !!(reg_read_bits(BMI160_RA_FIFO_CONFIG_1,
                             BMI160_FIFO_MAG_EN_BIT,
                             1));
@@ -2506,7 +2526,7 @@ int16_t BMI160Class::getRotationZ() {
  * @see getMotion6()
  * @see BMI160_RA_MAG_X_L
  */
-void BMI160Class::getMagneto(int16_t* x, int16_t* y, int16_t* z) {    //Ajout pour BMM150
+void BMI160Class::getMagneto(int16_t* x, int16_t* y, int16_t* z) {    //Added for BMM150 Support
     uint8_t buffer[6];
     buffer[0] = BMI160_RA_MAG_X_L;
     serial_buffer_transfer(buffer, 1, 6);
@@ -2520,7 +2540,7 @@ void BMI160Class::getMagneto(int16_t* x, int16_t* y, int16_t* z) {    //Ajout po
  * @see getMotion6()
  * @see BMI160_RA_MAG_X_L
  */
-int16_t BMI160Class::getMagnetoX() {      //Ajout pour BMM150
+int16_t BMI160Class::getMagnetoX() {      //Added for BMM150 Support
     uint8_t buffer[2];
     buffer[0] = BMI160_RA_MAG_X_L;
     serial_buffer_transfer(buffer, 1, 2);
@@ -2532,7 +2552,7 @@ int16_t BMI160Class::getMagnetoX() {      //Ajout pour BMM150
  * @see getMotion6()
  * @see BMI160_RA_MAG_Y_L
  */
-int16_t BMI160Class::getMagnetoY() {      //Ajout pour BMM150
+int16_t BMI160Class::getMagnetoY() {      //Added for BMM150 Support
     uint8_t buffer[2];
     buffer[0] = BMI160_RA_MAG_Y_L;
     serial_buffer_transfer(buffer, 1, 2);
@@ -2544,7 +2564,7 @@ int16_t BMI160Class::getMagnetoY() {      //Ajout pour BMM150
  * @see getMotion6()
  * @see BMI160_RA_MAG_Z_L
  */
-int16_t BMI160Class::getMagnetoZ() {      //Ajout pour BMM150
+int16_t BMI160Class::getMagnetoZ() {      //Added for BMM150 Support
     uint8_t buffer[2];
     buffer[0] = BMI160_RA_MAG_Z_L;
     serial_buffer_transfer(buffer, 1, 2);
