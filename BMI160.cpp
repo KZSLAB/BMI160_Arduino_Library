@@ -128,15 +128,47 @@ void BMI160Class::initialize()
                                 BMI160_GYR_PMU_STATUS_LEN))
         delay(1);
 
-    /* Initialize  the second interface as a magnetometer */
-    reg_write(BMI160_IF_CONF, BMI160_2ND_INT_MAG);
-    /* Power up the magnetometer */
+        /* Configure MAG interface and setup mode */
+    /* Set MAG interface normal power mode */
     reg_write(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);           //Added for BMM150 Support
+    delay(60);
+    /* Sequence for enabling pull-up register */
+    reg_write(BMI160_RA_FOC_CONF, BMI160_FOC_CONF_DEFAULT);
+    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
+    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
+    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
+    reg_write(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
+    reg_write_bits(BMI160_RA_MAG_X_H, 2, 4, 2);
+    reg_write(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
+    /* Set MAG I2C address to 0x10 */
     reg_write(BMI160_MAG_IF_0, BMM150_BASED_I2C_ADDR);              //Added for BMM150 Support
+    /* Enable MAG setup mode, set read out offset to MAX and burst length to 8 */
     reg_write(BMI160_MAG_IF_1, BMI160_MAG_MAN_EN);                  //Added for BMM150 Support
-    reg_write(BMI160_RA_MAG_CONF, BMI160_MAG_CONF_DEFAULT);         //Added for BMM150 Support
-    BMM150_reg_write(BMM150_POWER_REG, BMM150_POWER_REG_DEFAULT);   //Added for BMM150 Support
+    /* Enable MAG interface */
+    reg_write_bits(BMI160_IF_CONF, 2, 4, 2);
+
+        /* Configure BMM150 Sensor */
+    /* Enable BMM150 Sleep mode */
+    BMM150_reg_write(BMM150_POWER_REG, BMM150_EN_SLEEP_MODE);
+    //reg_write(BMI160_MAG_IF_4, BMM150_EN_SLEEP_MODE);
+    //reg_write(BMI160_MAG_IF_3, BMM150_POWER_REG);
+    delay(3);
+    /* Set BMM150 repetitions for X/Y-Axis */
+    BMM150_reg_write(BMM150_XY_REP_REG, BMM150_XY_REPETITIONS);
+    //reg_write(BMI160_MAG_IF_4, BMM150_XY_REPETITIONS);
+    //reg_write(BMI160_MAG_IF_3, BMM150_XY_REP_REG);
+    /* Set BMM150 repetitions for Z-Axis */
+    BMM150_reg_write(BMM150_Z_REP_REG, BMM150_Z_REPETITIONS);
+
+        /* Configure MAG interface for Data mode */
+    /* Configure MAG write address and data to force mode of BMM150 */
     BMM150_reg_write(BMM150_OPMODE_REG, BMM150_OPMODE_REG_DEFAULT); //Added for BMM150 Support
+    /* Configure MAG read data address */
+    reg_write(BMI160_MAG_IF_2, BMM150_R_DATA_ADDR);
+    /* Configure MAG interface data rate (25Hz) */
+    reg_write(BMI160_RA_MAG_CONF, BMI160_MAG_CONF_25Hz);            //Added for BMM150 Support
+    /* ENable MAG data mode */
+    reg_write_bits(BMI160_MAG_IF_1, 1, 7, 1);
     delay(1);
     /* Wait for power-up to complete */
     while (0x1 != reg_read_bits(BMI160_RA_PMU_STATUS,

@@ -146,17 +146,24 @@ THE SOFTWARE.
 #define BMI160_MAG_IF_3             0x4E  //Added for BMM150 Support
 #define BMI160_MAG_IF_4             0x4F  //Added for BMM150 Support
 
+#define BMM150_EN_SLEEP_MODE        0x01  //Added for BMM150 Support
+#define BMM150_XY_REPETITIONS       0x04  //Added for BMM150 Support
+#define BMM150_Z_REPETITIONS        0x0E  //Added for BMM150 Support
+
 #define BMM150_POWER_REG            0x4B  //Added for BMM150 Support
 #define BMM150_OPMODE_REG           0x4C  //Added for BMM150 Support
+#define BMM150_XY_REP_REG           0x51  //Added for BMM150 Support
+#define BMM150_Z_REP_REG            0x52  //Added for BMM150 Support
 
 //Based I2C addr is 0x20 caused it is 0x10 plus one 0 at the end.
 #define BMM150_BASED_I2C_ADDR       0x20  //Added for BMM150 Support
 #define BMI160_MAG_MAN_EN           0x83  //Added for BMM150 Support
 #define BMI160_MAG_MAN_DIS          0x03  //Added for BMM150 Support
-#define BMI160_MAG_CONF_DEFAULT     0x88  //Added for BMM150 Support
+#define BMI160_MAG_CONF_25Hz        0x06  //Added for BMM150 Support
 
 #define BMM150_POWER_REG_DEFAULT    0x01  //Added for BMM150 Support
-#define BMM150_OPMODE_REG_DEFAULT   0x00  //Added for BMM150 Support
+#define BMM150_OPMODE_REG_DEFAULT   0x02  //Added for BMM150 Support
+#define BMM150_R_DATA_ADDR          0x42  //Added for BMM150 Support
 
 #define BMI160_ANYMOTION_EN_BIT     0
 #define BMI160_ANYMOTION_EN_LEN     3
@@ -231,6 +238,8 @@ THE SOFTWARE.
 
 #define BMI160_RA_FOC_CONF          0x69
 
+#define BMI160_FOC_CONF_DEFAULT     0x40  //Added for BMM150 Support
+
 #define BMI160_IF_CONF              0x6B  //Added for BMM150 Support
 
 #define BMI160_2ND_INT_MAG          0x20  //Added for BMM150 Support
@@ -301,7 +310,15 @@ THE SOFTWARE.
 #define BMI160_CMD_STEP_CNT_CLR     0xB2
 #define BMI160_CMD_SOFT_RESET       0xB6
 
+#define BMI160_EN_PULL_UP_REG_1     0x37  //Added for BMM150 Support
+#define BMI160_EN_PULL_UP_REG_2     0x9A  //Added for BMM150 Support
+#define BMI160_EN_PULL_UP_REG_3     0xC0  //Added for BMM150 Support
+#define BMI160_EN_PULL_UP_REG_4     0x90  //Added for BMM150 Support
+#define BMI160_EN_PULL_UP_REG_5     0x80  //Added for BMM150 Support
+
 #define BMI160_RA_CMD               0x7E
+
+#define BMI160_7F                   0x7F  //Added for BMM150 Support
 
 /**
  * Interrupt Latch Mode options
