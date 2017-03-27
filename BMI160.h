@@ -141,7 +141,7 @@ THE SOFTWARE.
 #define BMI160_RA_FIFO_CONFIG_1     0x47
 
 #define BMI160_MAG_IF_0             0x4B  //Added for BMM150 Support
-#define BMI160_MAG_IF_1             0x4C< //Added for BMM150 Support
+#define BMI160_MAG_IF_1             0x4C  //Added for BMM150 Support
 #define BMI160_MAG_IF_2             0x4D  //Added for BMM150 Support
 #define BMI160_MAG_IF_3             0x4E  //Added for BMM150 Support
 #define BMI160_MAG_IF_4             0x4F  //Added for BMM150 Support

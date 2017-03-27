@@ -143,7 +143,7 @@ void BMI160Class::initialize()
     /* Set MAG I2C address to 0x10 */
     reg_write(BMI160_MAG_IF_0, BMM150_BASED_I2C_ADDR);              //Added for BMM150 Support
     /* Enable MAG setup mode, set read out offset to MAX and burst length to 8 */
-    reg_write(BMI160_MAG_IF_1, BMI160_MAG_MAN_EN);                  //Added for BMM150 Support
+    reg_write(BMI160_MAG_IF_1, BMI160_MAG_MAN_EN);            //Added for BMM150 Support
     /* Enable MAG interface */
     reg_write_bits(BMI160_IF_CONF, 2, 4, 2);
 
