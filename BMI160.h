@@ -150,6 +150,7 @@ THE SOFTWARE.
 #define BMM150_XY_REPETITIONS       0x04  //Added for BMM150 Support
 #define BMM150_Z_REPETITIONS        0x0E  //Added for BMM150 Support
 
+#define BMM150_DATA_REG             0x42  //Added for BMM150 Support
 #define BMM150_POWER_REG            0x4B  //Added for BMM150 Support
 #define BMM150_OPMODE_REG           0x4C  //Added for BMM150 Support
 #define BMM150_XY_REP_REG           0x51  //Added for BMM150 Support
@@ -163,6 +164,7 @@ THE SOFTWARE.
 
 #define BMM150_POWER_REG_DEFAULT    0x01  //Added for BMM150 Support
 #define BMM150_OPMODE_REG_DEFAULT   0x02  //Added for BMM150 Support
+#define BMM150_OPMODE_REG_P         0x06  //Added for BMM150 Support
 #define BMM150_R_DATA_ADDR          0x42  //Added for BMM150 Support
 
 #define BMI160_ANYMOTION_EN_BIT     0
