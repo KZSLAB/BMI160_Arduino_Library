@@ -1,6 +1,8 @@
 /*
  * BMI160 accelerometer/gyroscope library for Intel(R) Curie(TM) devices.
- *
+ * ===============================================
+ * File modified for the last time by the KZSLAB on April 2017
+ * ===============================================
  * Copyright (c) 2015 Intel Corporation.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -105,8 +107,8 @@ class CurieIMUClass : public BMI160Class {
         void setAccelerometerRate(float rate);
 
         // supported values: 25/32, 25/16, 25/8, 25/4, 25/2, 25, 50, 100, 200, 400, 800 (Hz)
-        float getMagRate();
-        void setMagRate(float rate);
+        float getMagRate();             //Added for BMM150 Support
+        void setMagRate(float rate);    //Added for BMM150 Support
 
         // supported values: 125, 250, 500, 1000, 2000 (degrees/second)
         int getGyroRange();
@@ -138,22 +140,22 @@ class CurieIMUClass : public BMI160Class {
         //   CURIE_IMU_SHOCK:
         //       2G: 3.91 to 1995.46 (mg), in steps of 7.81 mg
         //       4G: 7.81 to 3993.46 (mg), in steps of 15.63 mg
-        //       8G: 15.63 to 7984.38 (mg), in steps of 31.25 mg
+        //       8G: 15.63 to 7984.38 (mg), in steps of 31.25 mg 
         //       16G: 31.25 to 15968.75 (mg), in steps of 62.50 mg
         //   CURIE_IMU_MOTION:
         //       2G: 0 to 997.05 (mg), in steps of 3.91 mg
         //       4G: 0 to 1991.55 (mg), in steps of 7.81 mg
-        //       8G: 0 to 3985.65 (mg), in steps of 15.63 mg
+        //       8G: 0 to 3985.65 (mg), in steps of 15.63 mg 
         //       16G: 0 to 7968.75 (mg), in steps of 31.25 mg
         //   CURIE_IMU_ZERO_MOTION:
         //       2G: 0 to 997.05 (mg), in steps of 3.91 mg
         //       4G: 0 to 1991.55 (mg), in steps of 7.81 mg
-        //       8G: 0 to 3985.65 (mg), in steps of 15.63 mg
+        //       8G: 0 to 3985.65 (mg), in steps of 15.63 mg 
         //       16G: 0 to 7968.75 (mg), in steps of 31.25 mg
         //   CURIE_IMU_TAP:
         //       2G: 31.25 to 7968.75 (mg), in steps of 62.5 mg
         //       4G: 62.50 to 31937.50 (mg), in steps of 125.0 mg
-        //       8G: 125.0 to 63875.00 (mg), in steps of 250.0 mg
+        //       8G: 125.0 to 63875.00 (mg), in steps of 250.0 mg 
         //       16G: 250.0 to 127750.00 (mg), in steps of 500 mg
         float getDetectionThreshold(int feature);
         void setDetectionThreshold(int feature, float threshold);
@@ -162,16 +164,16 @@ class CurieIMUClass : public BMI160Class {
         //   CURIE_IMU_FREEFALL: 2.5 to 637.5 (ms), in steps of 2.5 ms
         //   CURIE_IMU_SHOCK: 50, 75 (ms)
         //   CURIE_IMU_MOTION: [1 - 4] / getAccelerometerRate() S
-        //   CURIE_IMU_ZERO_MOTION: 1.28, 2.56, 3.84, 5.12, 6.40, 7.68, 8.96,
+        //   CURIE_IMU_ZERO_MOTION: 1.28, 2.56, 3.84, 5.12, 6.40, 7.68, 8.96, 
         //                          10.24, 11.52, 12.80, 14.08, 15.36, 16.64,
         //                          17.92, 19.20, 20.48, 25.60, 30.72, 35.84,
         //                          40.96, 46.08, 51.20, 56.32, 61.44, 66.56,
-        //                          71.68, 76.80, 81.92, 87.04, 92.16, 97.28,
+        //                          71.68, 76.80, 81.92, 87.04, 92.16, 97.28, 
         //                          102.40, 112.64, 122.88, 133.12, 143.36,
-        //                          153.60, 163.84, 174.08, 184.32, 194.56,
-        //                          204.80, 215.04, 225.28, 235.52, 245.76,
-        //                          256.00, 266.24, 276.48, 286.72, 296.96,
-        //                          307.20, 317.44, 327.68, 337.92, 348.16,
+        //                          153.60, 163.84, 174.08, 184.32, 194.56, 
+        //                          204.80, 215.04, 225.28, 235.52, 245.76, 
+        //                          256.00, 266.24, 276.48, 286.72, 296.96, 
+        //                          307.20, 317.44, 327.68, 337.92, 348.16, 
         //                          358.40, 368.64, 378.88, 389.12, 399.36,
         //                          409.60, 419.84, 430.08 S
         //   CURIE_IMU_DOUBLE_TAP: 50, 100, 150, 200, 250, 275, 500, 700 ms
@@ -192,14 +194,14 @@ class CurieIMUClass : public BMI160Class {
         void setStepDetectionMode(int mode);
 
         void readMotionSensor(int& ax, int& ay, int& az, int& gx, int& gy, int& gz);
-        void readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz, int& t);
+        void readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz, int& rh); //Added for BMM150 Support
         void readAccelerometer(int& x, int& y, int& z);
         void readGyro(int& x, int& y, int& z);
         void readMag(int& x, int& y, int& z);
 
         int readAccelerometer(int axis);
         int readGyro(int axis);
-        int readMag(int axis);
+        int readMag(int axis);      //Added for BMM150 Support
         int readTemperature();
 
         bool shockDetected(int axis, int direction);

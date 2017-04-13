@@ -18,8 +18,10 @@ void BMI160GenClass::attachInterrupt(void (*callback)(void))
 {
     CurieIMUClass::attachInterrupt(NULL);
     if (0 <= interrupt_pin) {
-        ::attachInterrupt(interrupt_pin, callback, FALLING);
+        ::attachInterrupt(interrupt_pin, callback, FALLING); 
     } else {
         Serial.println("BMI160GenClass::attachInterrupt: No interruption pin specified.");
     }
 }
+
+BMI160GenClass BMI160;

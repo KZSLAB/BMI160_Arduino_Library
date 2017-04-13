@@ -1,4 +1,12 @@
 /*
+This library has been modified by the KZSLAB to add the support of the BMM150 as
+second interface. 
+Find more about it on Github: https://github.com/KZSLAB/BMI160_Arduino_Library 
+
+===============================================
+This library has been modified by Hanyazou to add the interruption,
+you can find more on https://github.com/hanyazou/BMI160-Arduino 
+
 ===============================================
 BMI160 accelerometer/gyroscope library for Intel(R) Curie(TM) devices.
 Copyright (c) 2015 Intel Corporation.  All rights reserved.
@@ -27,6 +35,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
 ===============================================
 */
 #include "BMI160.h"
@@ -78,25 +87,6 @@ uint8_t BMI160Class::reg_read_bits(uint8_t reg, unsigned pos, unsigned len)
     return b;
 }
 
-uint8_t BMI160Class::BMM150_reg_read (uint8_t reg)
-{
-    uint8_t b;
-    reg_write(BMI160_MAG_IF_2, reg);
-    delay(1);
-    b = reg_read(BMI160_MAG_IF_4);
-    delay(1);
-    return b;
-}
-
-void BMI160Class::BMM150_reg_write(uint8_t reg, uint8_t data)
-{
-    uint8_t b;
-    reg_write(BMI160_MAG_IF_4, data);
-    delay(1);
-    reg_write(BMI160_MAG_IF_3, reg);
-    delay(1);
-}
-
 /******************************************************************************/
 
 /** Power on and prepare for general usage.
@@ -132,75 +122,62 @@ void BMI160Class::initialize()
                                 BMI160_GYR_PMU_STATUS_LEN))
         delay(1);
 
+    setFullScaleGyroRange(BMI160_GYRO_RANGE_250);
+    setFullScaleAccelRange(BMI160_ACCEL_RANGE_2G);
+
+
         /* Configure MAG interface and setup mode */
     /* Set MAG interface normal power mode */
-    reg_write(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);           //Added for BMM150 Support
-    delay(60);
+    reg_write(BMI160_RA_CMD, BMI160_CMD_MAG_MODE_NORMAL);          //Added for BMM150 Support
+    delay(60); 
+
     /* Sequence for enabling pull-up register */
-    /*reg_write(BMI160_RA_FOC_CONF, BMI160_FOC_CONF_DEFAULT);
-    delay(1);
-    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);
-    delay(1);
-    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);
-    delay(1);
-    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);
-    delay(1);
-    reg_write(BMI160_7F, BMI160_EN_PULL_UP_REG_4);
-    delay(1);
-    reg_write_bits(BMI160_RA_MAG_X_H, 2, 4, 2);
-    delay(1);
-    reg_write(BMI160_7F, BMI160_EN_PULL_UP_REG_5);
-    delay(1);*/
+    reg_write(BMI160_RA_FOC_CONF, BMI160_FOC_CONF_DEFAULT);        //Added for BMM150 Support
+    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_1);             //Added for BMM150 Support
+    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_2);             //Added for BMM150 Support
+    reg_write(BMI160_RA_CMD, BMI160_EN_PULL_UP_REG_3);             //Added for BMM150 Support
+    reg_write(BMI160_7F, BMI160_EN_PULL_UP_REG_4);                 //Added for BMM150 Support
+    reg_write_bits(BMI160_RA_MAG_X_H, 2, 4, 2);                    //Added for BMM150 Support
+    reg_write(BMI160_7F, BMI160_EN_PULL_UP_REG_5);                 //Added for BMM150 Support
+
     /* Set MAG I2C address to 0x10 */
-    reg_write(BMI160_MAG_IF_0, BMM150_BASED_I2C_ADDR);              //Added for BMM150 Support
-    delay(1);
+    reg_write(BMI160_MAG_IF_0, BMM150_BASED_I2C_ADDR);             //Added for BMM150 Support
+    
     /* Enable MAG setup mode, set read out offset to MAX and burst length to 8 */
-    reg_write(BMI160_MAG_IF_1, BMI160_MAG_MAN_EN);            //Added for BMM150 Support
-    delay(1);
+    reg_write(BMI160_MAG_IF_1, BMI160_MAG_MAN_EN);                 //Added for BMM150 Support
+    
     /* Enable MAG interface */
-    reg_write_bits(BMI160_IF_CONF, 2, 4, 2);
-    delay(1);
+    reg_write_bits(BMI160_IF_CONF, 2, 4, 2);                       //Added for BMM150 Support
 
         /* Configure BMM150 Sensor */
     /* Enable BMM150 Sleep mode */
-    BMM150_reg_write(BMM150_POWER_REG, BMM150_EN_SLEEP_MODE);
-    //reg_write(BMI160_MAG_IF_4, BMM150_EN_SLEEP_MODE);
-    //reg_write(BMI160_MAG_IF_3, BMM150_POWER_REG);
+    reg_write(BMI160_MAG_IF_4, BMM150_EN_SLEEP_MODE);              //Added for BMM150 Support
+    reg_write(BMI160_MAG_IF_3, BMM150_POWER_REG);                  //Added for BMM150 Support
     delay(3);
 
-    BMM150_reg_write(BMM150_OPMODE_REG, BMM150_OPMODE_REG_P);
-    delay(1);
-
     /* Set BMM150 repetitions for X/Y-Axis */
-    BMM150_reg_write(BMM150_XY_REP_REG, BMM150_XY_REPETITIONS);
-    delay(1);
-    //reg_write(BMI160_MAG_IF_4, BMM150_XY_REPETITIONS);
-    //reg_write(BMI160_MAG_IF_3, BMM150_XY_REP_REG);
+    reg_write(BMI160_MAG_IF_4, BMM150_XY_REPETITIONS);             //Added for BMM150 Support
+    reg_write(BMI160_MAG_IF_3, BMM150_XY_REP_REG);                 //Added for BMM150 Support
+
     /* Set BMM150 repetitions for Z-Axis */
-    BMM150_reg_write(BMM150_Z_REP_REG, BMM150_Z_REPETITIONS);
-    delay(1);
+    reg_write(BMI160_MAG_IF_4, BMM150_Z_REPETITIONS);              //Added for BMM150 Support
+    reg_write(BMI160_MAG_IF_3, BMM150_Z_REP_REG);                  //Added for BMM150 Support
 
         /* Configure MAG interface for Data mode */
     /* Configure MAG write address and data to force mode of BMM150 */
-    BMM150_reg_write(BMM150_OPMODE_REG, BMM150_OPMODE_REG_DEFAULT); //Added for BMM150 Support
-    delay(1);
+    reg_write(BMI160_MAG_IF_4, BMM150_OPMODE_REG_DEFAULT);         //Added for BMM150 Support
+    reg_write(BMI160_MAG_IF_3, BMM150_OPMODE_REG);                 //Added for BMM150 Support
     /* Configure MAG interface data rate (25Hz) */
-    reg_write(BMI160_RA_MAG_CONF, BMI160_MAG_CONF_25Hz);            //Added for BMM150 Support
-    delay(1);
+    reg_write(BMI160_MAG_IF_2, BMM150_R_DATA_ADDR);                //Added for BMM150 Support
     /* Configure MAG read data address */
-    reg_write(BMI160_MAG_IF_2, BMM150_R_DATA_ADDR);
-    delay(1);
-    /* ENable MAG data mode */
-    reg_write_bits(BMI160_MAG_IF_1, 1, 7, 1);
-    delay(1);
+    reg_write(BMI160_RA_MAG_CONF, BMI160_MAG_CONF_25Hz);           //Added for BMM150 Support
+    /* Enable MAG data mode */
+    reg_write_bits(BMI160_MAG_IF_1, 0, 7, 1);                      //Added for BMM150 Support
     /* Wait for power-up to complete */
     while (0x1 != reg_read_bits(BMI160_RA_PMU_STATUS,
                                 BMI160_MAG_PMU_STATUS_BIT,
                                 BMI160_MAG_PMU_STATUS_LEN))
         delay(1);
-
-    setFullScaleGyroRange(BMI160_GYRO_RANGE_250);
-    setFullScaleAccelRange(BMI160_ACCEL_RANGE_2G);
 
     /* Only PIN1 interrupts currently supported - map all interrupts to PIN1 */
     reg_write(BMI160_RA_INT_MAP_0, 0xFF);
@@ -248,7 +225,7 @@ bool BMI160Class::testConnection()
  * @see BMI160_RA_MAG_CONF
  * @see BMI160MagRate
  */
-uint8_t BMI160Class::getMagRate() {
+uint8_t BMI160Class::getMagRate() {                                //Added for BMM150 Support
     return reg_read_bits(BMI160_RA_MAG_CONF,
                          BMI160_MAG_RATE_SEL_BIT,
                          BMI160_MAG_RATE_SEL_LEN);
@@ -260,7 +237,7 @@ uint8_t BMI160Class::getMagRate() {
  * @see BMI160_MAG_RATE_25HZ
  * @see BMI160_RA_MAG_CONF
  */
-void BMI160Class::setMagRate(uint8_t rate) {
+void BMI160Class::setMagRate(uint8_t rate) {                       //Added for BMM150 Support
     reg_write_bits(BMI160_RA_MAG_CONF, rate,
                    BMI160_MAG_RATE_SEL_BIT,
                    BMI160_MAG_RATE_SEL_LEN);
@@ -1159,7 +1136,7 @@ void BMI160Class::setMotionDetectionDuration(uint8_t samples) {
  * Zero Motion is detected when the difference between the value of
  * consecutive accelerometer measurements for each axis remains smaller than
  * this Motion detection threshold. This condition triggers the Zero Motion
- * interrupt if the condition is maintained for a time duration
+ * interrupt if the condition is maintained for a time duration 
  * specified in the int_slo_no_mot_dur field of the INT_MOTION[0] register (@see
  * BMI160_RA_INT_MOTION_0), and clears the interrupt when the condition is
  * then absent for the same duration.
@@ -1249,7 +1226,7 @@ void BMI160Class::setZeroMotionDetectionDuration(uint8_t duration) {
  * A Tap is detected as a shock event which exceeds the detection threshold for
  * a specified duration.  A threshold between 0.7g and 1.5g in the 2g
  * measurement range is suggested for typical tap detection applications.
- *
+ * 
  * For more details on the Tap detection interrupt, see Section 2.6.4 of the
  * BMI160 Data Sheet.
  *
@@ -1666,29 +1643,6 @@ void BMI160Class::setGyroFIFOEnabled(bool enabled) {
                    1);
 }
 
-/** Get magnetometer FIFO enabled value.
- * When set to 1, this bit enables magnetometer data samples to be
- * written into the FIFO buffer.
- * @return Current magnetometer FIFO enabled value
- * @see BMI160_RA_FIFO_CONFIG_1
- */
-bool BMI160Class::getMagFIFOEnabled() {                     //Added for BMM150 Support
-    return !!(reg_read_bits(BMI160_RA_FIFO_CONFIG_1,
-                            BMI160_FIFO_MAG_EN_BIT,
-                            1));
-}
-
-/** Set magnetometer FIFO enabled value.
- * @param enabled New magnetometer FIFO enabled value
- * @see getMagFIFOEnabled()
- * @see BMI160_RA_FIFO_CONFIG_1
- */
-void BMI160Class::setMagFIFOEnabled(bool enabled) {         //Ajour pour BMM150
-    reg_write_bits(BMI160_RA_FIFO_CONFIG_1, enabled ? 0x1 : 0,
-                   BMI160_FIFO_MAG_EN_BIT,
-                   1);
-}
-
 /** Get current FIFO buffer size.
  * This value indicates the number of bytes stored in the FIFO buffer. This
  * number is in turn the number of bytes that can be read from the FIFO buffer.
@@ -1710,7 +1664,7 @@ uint16_t BMI160Class::getFIFOCount() {
 /** Reset the FIFO.
  * This command clears all data in the FIFO buffer.  It is recommended
  * to invoke this after reconfiguring the FIFO.
- *
+ * 
  * @see BMI160_RA_CMD
  * @see BMI160_CMD_FIFO_FLUSH
  */
@@ -1720,7 +1674,7 @@ void BMI160Class::resetFIFO() {
 
 /** Reset the Interrupt controller.
  * This command clears interrupt status registers and latched interrupts.
- *
+ * 
  * @see BMI160_RA_CMD
  * @see BMI160_CMD_FIFO_FLUSH
  */
@@ -2334,7 +2288,7 @@ void BMI160Class::getMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx,
     *az = (((int16_t)buffer[11]) << 8) | buffer[10];
 }
 
-/** Get raw 9-axis motion sensor readings (accel/gyro/magneto).
+/** Get raw 9-axis motion sensor readings (accel/gyro/magneto) plus the hall resistor readings.
  * Retrieves all currently available motion sensor values.
  * @param ax 16-bit signed integer container for accelerometer X-axis value
  * @param ay 16-bit signed integer container for accelerometer Y-axis value
@@ -2345,19 +2299,21 @@ void BMI160Class::getMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx,
  * @param mx 16-bit signed integer container for magnetometer X-axis value
  * @param my 16-bit signed integer container for magnetometer Y-axis value
  * @param mz 16-bit signed integer container for magnetometer Z-axis value
+ * @param rh 16-bit signed integer container for Hall resistor value
  * @see getAcceleration()
  * @see getRotation()
- * @see getMagneto() (TODO)
+ * @see getMagneto()
  * @see BMI160_RA_MAG_X_L
  */
-void BMI160Class::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz, int16_t* t) {
+void BMI160Class::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, 
+                            int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz, int16_t* rh) {          //Added for BMM150 Support
     uint8_t buffer[20];
     buffer[0] = BMI160_RA_MAG_X_L;
     serial_buffer_transfer(buffer, 1, 20);
     *mx = (((int16_t)buffer[1])  << 8) | buffer[0];
     *my = (((int16_t)buffer[3])  << 8) | buffer[2];
     *mz = (((int16_t)buffer[5])  << 8) | buffer[4];
-    *t  = (((int16_t)buffer[7])  << 8) | buffer[6];
+    *rh  = (((int16_t)buffer[7])  << 8) | buffer[6];
     *gx = (((int16_t)buffer[9])  << 8) | buffer[8];
     *gy = (((int16_t)buffer[11])  << 8) | buffer[10];
     *gz = (((int16_t)buffer[13])  << 8) | buffer[12];
@@ -2365,6 +2321,7 @@ void BMI160Class::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx,
     *ay = (((int16_t)buffer[17])  << 8) | buffer[16];
     *az = (((int16_t)buffer[19]) << 8) | buffer[18];
 }
+
 
 /** Get 3-axis accelerometer readings.
  * These registers store the most recent accelerometer measurements.
@@ -2578,7 +2535,7 @@ int16_t BMI160Class::getRotationZ() {
  * @param x 16-bit signed integer container for X-axis rotation
  * @param y 16-bit signed integer container for Y-axis rotation
  * @param z 16-bit signed integer container for Z-axis rotation
- * @see getMotion6()
+ * @see getMotion9()
  * @see BMI160_RA_MAG_X_L
  */
 void BMI160Class::getMagneto(int16_t* x, int16_t* y, int16_t* z) {    //Added for BMM150 Support
@@ -2595,7 +2552,7 @@ void BMI160Class::getMagneto(int16_t* x, int16_t* y, int16_t* z) {    //Added fo
  * @see getMotion6()
  * @see BMI160_RA_MAG_X_L
  */
-int16_t BMI160Class::getMagnetoX() {      //Added for BMM150 Support
+int16_t BMI160Class::getMagnetoX() {                                  //Added for BMM150 Support
     uint8_t buffer[2];
     buffer[0] = BMI160_RA_MAG_X_L;
     serial_buffer_transfer(buffer, 1, 2);
@@ -2607,7 +2564,7 @@ int16_t BMI160Class::getMagnetoX() {      //Added for BMM150 Support
  * @see getMotion6()
  * @see BMI160_RA_MAG_Y_L
  */
-int16_t BMI160Class::getMagnetoY() {      //Added for BMM150 Support
+int16_t BMI160Class::getMagnetoY() {                                  //Added for BMM150 Support
     uint8_t buffer[2];
     buffer[0] = BMI160_RA_MAG_Y_L;
     serial_buffer_transfer(buffer, 1, 2);
@@ -2619,7 +2576,7 @@ int16_t BMI160Class::getMagnetoY() {      //Added for BMM150 Support
  * @see getMotion6()
  * @see BMI160_RA_MAG_Z_L
  */
-int16_t BMI160Class::getMagnetoZ() {      //Added for BMM150 Support
+int16_t BMI160Class::getMagnetoZ() {                                  //Added for BMM150 Support
     uint8_t buffer[2];
     buffer[0] = BMI160_RA_MAG_Z_L;
     serial_buffer_transfer(buffer, 1, 2);

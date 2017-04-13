@@ -1,4 +1,8 @@
 /*
+ * BMI160 accelerometer/gyroscope library for Intel(R) Curie(TM) devices.
+ * ===============================================
+ * File modified for the last time by the KZSLAB on April 2017
+ * ===============================================
  * Copyright (c) 2015 Intel Corporation.  All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -42,14 +46,14 @@
 bool CurieIMUClass::begin()
 {
 #if defined(BMI160GEN_USE_CURIEIMU)
-    /* Configure pin-mux settings on the Intel Curie module to
+    /* Configure pin-mux settings on the Intel Curie module to 
      * enable SPI mode usage */
-    SET_PIN_MODE(35, QRK_PMUX_SEL_MODEA); // SPI1_SS_MISO
+    SET_PIN_MODE(35, QRK_PMUX_SEL_MODEA); // SPI1_SS_MISO 
     SET_PIN_MODE(36, QRK_PMUX_SEL_MODEA); // SPI1_SS_MOSI
     SET_PIN_MODE(37, QRK_PMUX_SEL_MODEA); // SPI1_SS_SCK
     SET_PIN_MODE(38, QRK_PMUX_SEL_MODEA); // SPI1_SS_CS_B[0]
 #endif
-
+ 
     ss_spi_init();
 
     /* Perform a dummy read from 0x7f to switch to spi interface */
@@ -1661,11 +1665,11 @@ void CurieIMUClass::readMotionSensor(int& ax, int& ay, int& az, int& gx, int& gy
     gz = sgz;
 }
 
-void CurieIMUClass::readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz, int& t)
+void CurieIMUClass::readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& gy, int& gz, int& mx, int& my, int& mz, int& rh) //Added for BMM150 Support
 {
-    int16_t sax, say, saz, sgx, sgy, sgz, smx, smy, smz, st;
+    int16_t sax, say, saz, sgx, sgy, sgz, smx, smy, smz, srh;
 
-    getMotion9(&sax, &say, &saz, &sgx, &sgy, &sgz, &smx, &smy, &smz, &st);
+    getMotion9(&sax, &say, &saz, &sgx, &sgy, &sgz, &smx, &smy, &smz, &srh);
 
     ax = sax;
     ay = say;
@@ -1676,7 +1680,7 @@ void CurieIMUClass::readMotionSensor9(int& ax, int& ay, int& az, int& gx, int& g
     mx = smx;
     my = smy;
     mz = smz;
-    t  = st;
+    rh  = srh;
 }
 
 void CurieIMUClass::readAccelerometer(int& x, int& y, int& z)
@@ -1722,7 +1726,7 @@ int CurieIMUClass::readAccelerometer(int axis)
         return getAccelerationZ();
     }
 
-    return 0;
+    return 0; 
 }
 
 int CurieIMUClass::readGyro(int axis)
